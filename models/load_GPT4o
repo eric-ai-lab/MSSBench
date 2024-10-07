@@ -1,1 +1,70 @@
+import argparse
+import json
+import os
+import time
+import base64
+import re
+from pathlib import Path
+from mimetypes import guess_type
+import logging
+from tqdm import tqdm
+from openai import AzureOpenAI
+import random
 
+api_base = "your api link"
+api_key = "your api key"
+deployment_name = "user name"
+api_version = 'api_version'
+
+client = AzureOpenAI(
+    api_key=api_key,
+    api_version=api_version,
+    base_url=f"{api_base}/openai/deployments/{deployment_name}"
+)
+
+USER_PROMPT = '{information}'
+
+def local_image_to_data_url(image_path):
+    mime_type, _ = guess_type(image_path)
+    if mime_type is None:
+        mime_type = 'application/octet-stream'
+
+    with open(image_path, "rb") as image_file:
+        base64_encoded_data = base64.b64encode(image_file.read()).decode('utf-8')
+    return f"data:{mime_type};base64,{base64_encoded_data}"
+
+def llm(prompt, image_path):
+    try:
+        response = client.chat.completions.create(
+            model=deployment_name,
+            messages=[
+                {"role": "user", "content": [
+                    {
+                        "type": "text",
+                        "text": prompt
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": local_image_to_data_url(image_path)
+                        }
+                    }
+                ]}
+            ],
+            max_tokens=2000
+        )
+
+        response = json.loads(response.json())
+        return response['choices'][0]['message']['content']
+    except Exception as e:
+        return None
+
+def iterative_create_response(data_creater, information, image_path):
+    responses = []
+    for i in range(1):
+        if i == 0:
+            context = USER_PROMPT.format(information=information)
+            response = data_creater(context, image_path)
+        time.sleep(1)
+        responses.append(response)
+    return responses
