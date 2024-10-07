@@ -17,7 +17,7 @@ model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-VL-Chat", device_map="cu
 model.generation_config = GenerationConfig.from_pretrained("Qwen/Qwen-VL-Chat", trust_remote_code=True)
 
 # Function to generate caption with grounding
-def generate_caption_with_grounding(image_path, text_prompt):
+def call_model(image_path, text_prompt):
 
     query = tokenizer.from_list_format([
         {'image': image_path},
