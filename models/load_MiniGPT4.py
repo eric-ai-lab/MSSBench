@@ -65,7 +65,6 @@ def parse_args():
 
 def setup_seeds(config):
     seed = config.run_cfg.seed + get_rank()
-
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -74,7 +73,7 @@ def setup_seeds(config):
     cudnn.deterministic = True
 
 
-def generate_caption_with_grounding(img_path, query):
+def call_model(img_path, query):
     img = Image.open(img_path)
     img = img.convert('RGB')
     img_list = []
@@ -111,8 +110,6 @@ if __name__ == '__main__':
         vis_processor_cfg.name).from_config(vis_processor_cfg)
     chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id))
     logging.info('=======Initialization Finished=======')
-
-
 #---------------------------MiniGPT-v2-------------------------------
 import sys
 import argparse
