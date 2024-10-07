@@ -3,19 +3,16 @@ import time
 import base64
 from mimetypes import guess_type
 from openai import AzureOpenAI
-
-# Configure logging (optional but recommended)
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Configuration parameters
+
 API_BASE = "your_api_link"
 API_KEY = "your_api_key"
 DEPLOYMENT_NAME = "your_deployment_name"
 API_VERSION = 'your_api_version'
 
-# Initialize the AzureOpenAI client
 client = AzureOpenAI(
     api_key=API_KEY,
     api_version=API_VERSION,
@@ -60,10 +57,7 @@ def call_model(image_path, prompt):
         str: The model's response.
     """
     try:
-        # Convert the local image to a data URL
         image_data_url = local_image_to_data_url(image_path)
-
-        # Prepare the messages payload
         messages = [
             {
                 "role": "user",
@@ -82,7 +76,6 @@ def call_model(image_path, prompt):
             }
         ]
 
-        # Send the request to the Azure OpenAI API
         logger.info("Sending request to Azure OpenAI API...")
         response = client.chat.completions.create(
             model=DEPLOYMENT_NAME,
@@ -90,11 +83,8 @@ def call_model(image_path, prompt):
             max_tokens=2000
         )
 
-        # Parse the JSON response
         response_json = response.json()
         logger.debug(f"API response: {response_json}")
-
-        # Extract and return the content
         content = response_json['choices'][0]['message']['content']
         logger.info("Received response from model.")
         return content
