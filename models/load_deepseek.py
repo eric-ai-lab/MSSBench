@@ -15,7 +15,7 @@ vl_gpt: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(model_path,
 vl_gpt = vl_gpt.to(torch.bfloat16).cuda().eval()
 
 
-def generate_caption_with_grounding(image_path, query):
+def call_model(image_path, query):
     conversation = [
         {
             "role": "User",
