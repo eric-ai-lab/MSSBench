@@ -2,6 +2,7 @@
 [Kaiwen Zhou*](https://kevinz-01.github.io/)<sup style="color: #FFB6C1;">1</sup>, [Chengzhi Liu*](https://scholar.google.com.hk/citations?user=QC1kfNYAAAAJ&hl=zh-CN)<sup style="color: #FFB6C1;">1</sup>, [Xuandong Zhao](https://xuandongzhao.github.io/)<sup style="color: #FFB6C1;">2</sup>,  [Anderson Compalas](https://acompalas.github.io/#projects)<sup style="color: #FFB6C1;">1</sup>, [Dawn Song](https://dawnsong.io/)<sup style="color: #FFB6C1;">2</sup>,  [Xin Eric Wang†](https://eric-xw.github.io/)<sup style="color: #FFB6C1;">1</sup>
 
 <sup style="color: #FFB6C1;">1</sup>University of California, Santa Cruz, <sup style="color: #FFB6C1;">2</sup>University of California, Berkley
+
 <sup style="color: #FFB6C1;">*</sup>Equal contribution
 
 <a href='https://arxiv.org/abs/2406.08407'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a> <a href='https://mssbench.github.io/ '><img src='https://img.shields.io/badge/Project-Page-green'></a> <a href='https://huggingface.co/datasets/kzhou35/mssbench/tree/main'><img src='https://img.shields.io/badge/🤗-Dataset-blue'></a>
