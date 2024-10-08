@@ -12,7 +12,6 @@ import tqdm
 import random
 
 
-
 # Function to load model
 def load_model(model_path):
     model_name = get_model_name_from_path(model_path)
@@ -65,6 +64,14 @@ def call_model(tokenizer, model, image_processor, image_path, query):
     outputs = tokenizer.decode(output_ids[0, input_ids.shape[1]:]).strip()
     return outputs
 
+
+model_path = 'MAGAer13/mplug-owl2-llama2-7b'
+tokenizer, model, image_processor = load_model(model_path)
+
+image_path = 'image.jpg'
+text_prompt = 'Describe the image'
+response = call_model(tokenizer, model, image_processor, image_path, text_prompt )
+print(response)
 
 
 # ------------------------------------------------------- Second choice -------------------------------------------------
