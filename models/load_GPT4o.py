@@ -1,67 +1,47 @@
+import argparse
 import json
+import os
 import time
 import base64
+import re
+from pathlib import Path
 from mimetypes import guess_type
-from openai import AzureOpenAI
 import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-
-API_BASE = "your_api_link"
-API_KEY = "your_api_key"
-DEPLOYMENT_NAME = "your_deployment_name"
-API_VERSION = 'your_api_version'
+from tqdm import tqdm
+from openai import AzureOpenAI
+import random
+api_base =  "your_api_link"
+api_key = "your_api_key"
+deployment_name = "your_deployment_name"
+api_version = 'your_api_version'
 
 client = AzureOpenAI(
-    api_key=API_KEY,
-    api_version=API_VERSION,
-    base_url=f"{API_BASE}/openai/deployments/{DEPLOYMENT_NAME}"
+    api_key=api_key,
+    api_version=api_version,
+    base_url=f"{api_base}/openai/deployments/{deployment_name}"
 )
 
-USER_PROMPT_TEMPLATE = '{information}'
+USER_PROMPT = '{information}'
 
 def local_image_to_data_url(image_path):
-    """
-    Converts a local image file to a data URL.
-
-    Args:
-        image_path (str): Path to the image file.
-
-    Returns:
-        str: Data URL of the image.
-    """
+    # Guess the MIME type of the image based on the file extension
     mime_type, _ = guess_type(image_path)
     if mime_type is None:
-        mime_type = 'application/octet-stream'
+        mime_type = 'application/octet-stream'  # Default MIME type if none is found
 
+    # Read and encode the image file
+    with open(image_path, "rb") as image_file:
+        base64_encoded_data = base64.b64encode(image_file.read()).decode('utf-8')
+
+    # Construct the data URL
+    return f"data:{mime_type};base64,{base64_encoded_data}"
+
+def call_model(prompt, image_path):
     try:
-        with open(image_path, "rb") as image_file:
-            base64_encoded_data = base64.b64encode(image_file.read()).decode('utf-8')
-        data_url = f"data:{mime_type};base64,{base64_encoded_data}"
-        logger.debug(f"Converted image {image_path} to data URL.")
-        return data_url
-    except Exception as e:
-        logger.error(f"Failed to convert image to data URL: {e}")
-        raise
-
-def call_model(image_path, prompt):
-    """
-    Calls the Azure OpenAI model with the provided image and prompt.
-
-    Args:
-        image_path (str): Path to the image file.
-        prompt (str): The prompt to send to the model.
-
-    Returns:
-        str: The model's response.
-    """
-    try:
-        image_data_url = local_image_to_data_url(image_path)
-        messages = [
-            {
-                "role": "user",
-                "content": [
+        response = client.chat.completions.create(
+            model=deployment_name,
+            messages=[
+                {"role": "user", "content": [
                     {
                         "type": "text",
                         "text": prompt
@@ -69,26 +49,15 @@ def call_model(image_path, prompt):
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": image_data_url
+                            "url": local_image_to_data_url(image_path)
                         }
                     }
-                ]
-            }
-        ]
-
-        logger.info("Sending request to Azure OpenAI API...")
-        response = client.chat.completions.create(
-            model=DEPLOYMENT_NAME,
-            messages=messages,
+                ]}
+            ],
             max_tokens=2000
         )
 
-        response_json = response.json()
-        logger.debug(f"API response: {response_json}")
-        content = response_json['choices'][0]['message']['content']
-        logger.info("Received response from model.")
-        return content
-
+        response = json.loads(response.json())
+        return response['choices'][0]['message']['content']
     except Exception as e:
-        logger.error(f"Error calling the model: {e}")
         return None
