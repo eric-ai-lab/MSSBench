@@ -35,8 +35,10 @@ Each entry in the Embodied Task dataset contains the following fields:
 
 ## Evaluation
 You can do evaluation by running our evaluation code [eval.py](utils/infer_on_data.py). 
+
 The deployment of the model can refer to [models](models).
-We provide a Multi-Agent framework for enhancing situational safety — refer to[eval.py](utils/infer_on_multiagent.py) for details.
+
+We provide a Multi-Agent framework for enhancing situational safety — refer to [infer_on_multiagent.py](utils/infer_on_multiagent.py) for details.
 
 
 
