@@ -30,4 +30,6 @@ Each entry in the Embodied Task dataset contains the following fields:
 - `unsafe`: the file path to the unsafe image.
 
 ## Evaluation
+You can do evaluation by running our evaluation code [eval.py](utils/infer_on_data.py). 
+The deployment of the model can refer to [models](models).
 
