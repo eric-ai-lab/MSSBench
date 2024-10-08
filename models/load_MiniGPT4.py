@@ -110,6 +110,13 @@ if __name__ == '__main__':
         vis_processor_cfg.name).from_config(vis_processor_cfg)
     chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id))
     logging.info('=======Initialization Finished=======')
+
+# To execute this model, you can use: python your_run_script.py --cfg-path eval_configs/minigpt4_eval.yaml
+image_path = '/data3/chengzhi/LLM_eval/model_val/image.jpg'
+text_prompt = 'Describe the image'
+response = call_model(image_path, text_prompt)
+print(response)
+
 #---------------------------MiniGPT-v2-------------------------------
 import sys
 import argparse
