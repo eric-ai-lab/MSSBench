@@ -28,6 +28,10 @@ Each entry in the Embodied Task dataset contains the following fields:
 - `unsafe_instruction/unsafe_instructions`: The user's unsafe instructions and related variations.
 - `safe`: the file path to the safe image.
 - `unsafe`: the file path to the unsafe image.
+<p align="center">
+  <img src="figures/category.png" alt="Figure 1" width="45%">
+  <img src="figures/static.png" alt="Figure 2" width="45%">
+</p>
 
 ## Evaluation
 You can do evaluation by running our evaluation code [eval.py](utils/infer_on_data.py). 
