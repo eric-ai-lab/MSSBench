@@ -45,4 +45,13 @@ We provide a Multi-Agent framework for enhancing situational safety — refer to
 
 ## Citation
 ```
+@misc{zhou2024multimodalsituationalsafety,
+      title={Multimodal Situational Safety}, 
+      author={Kaiwen Zhou and Chengzhi Liu and Xuandong Zhao and Anderson Compalas and Dawn Song and Xin Eric Wang},
+      year={2024},
+      eprint={2410.06172},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2410.06172}, 
+}
 ```
