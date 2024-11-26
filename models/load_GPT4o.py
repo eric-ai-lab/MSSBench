@@ -36,7 +36,7 @@ def local_image_to_data_url(image_path):
     # Construct the data URL
     return f"data:{mime_type};base64,{base64_encoded_data}"
 
-def call_model(prompt, image_path):
+def call_model(image_path, prompt):
     try:
         response = client.chat.completions.create(
             model=deployment_name,
@@ -60,4 +60,4 @@ def call_model(prompt, image_path):
         response = json.loads(response.json())
         return response['choices'][0]['message']['content']
     except Exception as e:
-        return None
+        return "None"

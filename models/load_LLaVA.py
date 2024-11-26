@@ -56,30 +56,17 @@ tokenizer, model, image_processor, context_len = load_pretrained_model(
 )
 
 
-def call_model(image_file,prompt):
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--model-path", type=str, default="liuhaotian/llava-v1.5-7b")
-    parser.add_argument("--model-base", type=str, default=None)
-    parser.add_argument("--image-file", type=str, default=None)
-    parser.add_argument("--query", type=str, default=None)
-    parser.add_argument("--conv-mode", type=str, default=None)
-    parser.add_argument("--sep", type=str, default=",")
-    parser.add_argument("--temperature", type=float, default=0.2)
-    parser.add_argument("--top_p", type=float, default=None)
-    parser.add_argument("--num_beams", type=int, default=1)
-    parser.add_argument("--max_new_tokens", type=int, default=512)
-    parser.add_argument("--f", type=str, default='')
-    args = parser.parse_args()
+def call_model(image_file, prompt):
     args = type('Args', (), {
     "model_path": model_path,
     "model_base": None,
-    "model_name": get_model_name_from_path(model_path),
+    "model_name": model_name,
     "query": prompt,
     "conv_mode": None,
     "image_file": image_file,
     "sep": ",",
-    "temperature": 1,
-    "top_p":1,
+    "temperature": 0,
+    "top_p":None,
     "num_beams": 1,
     "max_new_tokens":512
     })()
@@ -123,6 +110,7 @@ def call_model(image_file,prompt):
 
     image_files = image_parser(args)
     images = load_images(image_files)
+    image_sizes = [x.size for x in images]
     images_tensor = process_images(
         images,
         image_processor,
@@ -135,35 +123,27 @@ def call_model(image_file,prompt):
         .cuda()
     )
 
-    stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
-    keywords = [stop_str]
-    stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
-
+    # print(images_tensor)
     with torch.inference_mode():
         output_ids = model.generate(
             input_ids,
             images=images_tensor,
+            image_sizes=image_sizes,
             do_sample=True if args.temperature > 0 else False,
             temperature=args.temperature,
-            top_p=args.top_p,
             num_beams=args.num_beams,
             max_new_tokens=args.max_new_tokens,
             use_cache=True,
-            stopping_criteria=[stopping_criteria],
         )
 
-    input_token_len = input_ids.shape[1]
-    n_diff_input_output = (input_ids != output_ids[:, :input_token_len]).sum().item()
-    if n_diff_input_output > 0:
-        print(
-            f"[Warning] {n_diff_input_output} output_ids are not the same as the input_ids"
-        )
+    # input_token_len = input_ids.shape[1]
+    # n_diff_input_output = (input_ids != output_ids[:, :input_token_len]).sum().item()
+    # if n_diff_input_output > 0:
+    #     print(
+    #         f"[Warning] {n_diff_input_output} output_ids are not the same as the input_ids"
+    #     )
     outputs = tokenizer.batch_decode(
-        output_ids[:, input_token_len:], skip_special_tokens=True
-    )[0]
-    outputs = outputs.strip()
-    if outputs.endswith(stop_str):
-        outputs = outputs[: -len(stop_str)]
-    outputs = outputs.strip()
+        output_ids, skip_special_tokens=True
+    )[0].strip()
     # print(outputs)
     return outputs
