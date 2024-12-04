@@ -9,7 +9,6 @@
 </a>
 
 ![Teaser figure](figures/fig1.png)
-Multimodal Large Language Models (MLLMs) are rapidly evolving, demonstrating impressive capabilities as multimodal assistants that interact with both humans and their environments. However, this increased sophistication introduces significant safety concerns. In this paper, we present the first evaluation and analysis of a novel safety challenge termed Multimodal Situational Safety, which explores how safety considerations vary based on the specific situation in which the user or agent is engaged. We argue that for an MLLM to respond safely—whether through language or action—it often needs to assess the safety implications of a language query within its corresponding visual context. To evaluate this capability, we develop the Multimodal Situational Safety benchmark (MSSBench) to assess the situational safety performance of current MLLMs. The dataset comprises 1,820 language query-image pairs, half of which the image context is safe, and the other half is unsafe. We also develop an evaluation framework that analyzes key safety aspects, including explicit safety reasoning, visual understanding, and, crucially, situational safety reasoning. Our findings reveal that current MLLMs struggle with this nuanced safety problem in the instruction-following setting and struggle to tackle these situational safety challenges all at once, highlighting a key area for future research. Furthermore, we develop multi-agent pipelines to coordinately solve safety challenges, which shows consistent improvement in safety over the original MLLM response.
 
 ## Dataset Structure
 The [Dataset](https://huggingface.co/datasets/kzhou35/mssbench/tree/main) can be downloaded from Hugging Face.
@@ -35,11 +34,14 @@ Each entry in the Embodied Task dataset contains the following fields:
 </p>
 
 ## Evaluation
-You can do evaluation by running our evaluation code [inference.py](inference.py). 
+You can do evaluation by running our evaluation code [inference.py](inference.py): 
 
-The deployment of the model can refer to [models](models).
+```sh
+python inference.py --mllm gemini --data_root xxx --output_dir xxx
+```
 
-We provide a Multi-Agent framework for enhancing situational safety — refer to [infer_on_multiagent.py](utils/infer_on_multiagent.py) for details.
+The deployment of the model can refer to [models](models). For proprietary models, please set up your API key first.
+
 
 
 
