@@ -34,7 +34,7 @@ Each entry in the Embodied Task dataset contains the following fields:
 </p>
 
 ## Evaluation
-You can do evaluation by running our evaluation code [inference.py](inference.py): 
+You can evaluate different MLLMs by running our evaluation code [inference.py](inference.py) and changing the "--mllm" parameter: 
 
 ```sh
 python inference.py --mllm gemini --data_root xxx --output_dir xxx
