@@ -42,7 +42,7 @@ python inference.py --mllm gemini --data_root xxx --output_dir xxx
 
 The deployment of the model can refer to [models](models). For proprietary models, please set up your API key first.
 
-For ablation results, please adjust different values for "setting":
+For results in ablation study (figure 4 in the paper), please adjust different values for "setting", for example:
 ```sh
 python inference.py --mllm gemini --data_root xxx --output_dir xxx --setting qc
 ```
